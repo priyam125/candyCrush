@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import blank from '../images/blank.png'
+
+
+
 
 const Board = ({ width, candyColors }) => {
   const [currentColorArrangement, setCurrentColorArrangement] = useState([]);
@@ -11,7 +15,7 @@ const Board = ({ width, candyColors }) => {
   useEffect(() => {
     createBoard();
     setCounter(1);
-  }, []);
+  }, []); 
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -47,7 +51,7 @@ const Board = ({ width, candyColors }) => {
         )
       ) {
         columnOfThree.forEach(
-          (square) => (currentColorArrangement[square] = "")
+          (square) => (currentColorArrangement[square] = blank)
         );
       }
     }
@@ -64,7 +68,7 @@ const Board = ({ width, candyColors }) => {
         )
       ) {
         columnOfFour.forEach(
-          (square) => (currentColorArrangement[square] = "")
+          (square) => (currentColorArrangement[square] = blank)
         );
       }
     }
@@ -85,7 +89,7 @@ const Board = ({ width, candyColors }) => {
           (square) => currentColorArrangement[square] === decidedColor
         )
       ) {
-        rowOfThree.forEach((square) => (currentColorArrangement[square] = ""));
+        rowOfThree.forEach((square) => (currentColorArrangement[square] = blank));
       }
     }
   };
@@ -106,7 +110,7 @@ const Board = ({ width, candyColors }) => {
           (square) => currentColorArrangement[square] === decidedColor
         )
       ) {
-        rowOfFour.forEach((square) => (currentColorArrangement[square] = ""));
+        rowOfFour.forEach((square) => (currentColorArrangement[square] = blank));
       }
     }
   };
@@ -116,14 +120,14 @@ const Board = ({ width, candyColors }) => {
       const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
       const isFirstRow = firstRow.includes(i);
 
-      if (isFirstRow && currentColorArrangement[i] === "") {
+      if (isFirstRow && currentColorArrangement[i] === blank) {
         let randomNumber = Math.floor(Math.random() * candyColors.length);
         currentColorArrangement[i] = candyColors[randomNumber];
       }
 
-      if (currentColorArrangement[i + width] === "") {
+      if (currentColorArrangement[i + width] === blank) {
         currentColorArrangement[i + width] = currentColorArrangement[i];
-        currentColorArrangement[i] = "";
+        currentColorArrangement[i] = blank;
       }
     }
   };
@@ -148,9 +152,9 @@ const Board = ({ width, candyColors }) => {
     );
 
     currentColorArrangement[squareBeingReplacedId] =
-      squareBeingDragged.style.backgroundColor;
+      squareBeingDragged.getAttribute('src');
     currentColorArrangement[squareBeingDraggedId] =
-      squareBeingReplaced.style.backgroundColor;
+      squareBeingReplaced.getAttribute('src');
 
     const validMoves = [
       squareBeingDraggedId - 1,
@@ -173,8 +177,8 @@ const Board = ({ width, candyColors }) => {
         setSquareBeingDragged(null)
         setSquareBeingReplaced(null)
     } else {
-        currentColorArrangement[squareBeingReplacedId] = squareBeingReplaced.style.backgroundColor
-        currentColorArrangement[squareBeingDraggedId] = squareBeingDragged.style.backgroundColor
+        currentColorArrangement[squareBeingReplacedId] = squareBeingReplaced.getAttribute('src')
+        currentColorArrangement[squareBeingDraggedId] = squareBeingDragged.getAttribute('src')
         setCurrentColorArrangement([...currentColorArrangement])
     }
   };
@@ -186,7 +190,7 @@ const Board = ({ width, candyColors }) => {
           <img
             className="image"
             key={index}
-            style={{ backgroundColor: candyColor }}
+            src={candyColor}
             alt={candyColor}
             data-id={index}
             draggable={true}
