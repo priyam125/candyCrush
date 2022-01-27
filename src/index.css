@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -11,3 +15,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.game {
+  width: 560px;
+  height: 560px;
+}
+
+.image {
+  width: 70px;
+  height: 70px;
+}
+
+/* .game {
+  width: 64%;
+  height: 64%;
+}
+
+.image {
+  width: 8%;
+  height: 8%;
+} */
