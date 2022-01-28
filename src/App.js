@@ -7,6 +7,7 @@ import orangeCandy from './images/orange-candy.png'
 import purpleCandy from './images/purple-candy.png'
 import redCandy from './images/red-candy.png'
 import yellowCandy from './images/yellow-candy.png'
+import './index.css'
 
 const width = 8
 const candyColors = [

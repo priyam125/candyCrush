@@ -26,6 +26,18 @@ code {
   height: 70px;
 }
 
+.scoreboard {
+  font-family: 'Dongle', sans-serif;
+  /* color: linear-gradient(to right, red,orange,yellow,purple,green,blue); */
+  /* background: linear-gradient(to right, #ff8a00 0%, #dd4c4f 100%); */
+  background: linear-gradient(to right, red,orange,purple,green,blue);
+  /* Mask the color to the text, and remove the rest  */
+  -webkit-background-clip: text;
+  /* Make the text fill color value transparent so the masked background color comes through */
+  -webkit-text-fill-color: transparent;
+  height: 150px;
+}
+
 /* .game {
   width: 64%;
   height: 64%;

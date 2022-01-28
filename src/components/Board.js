@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import blank from '../images/blank.png'
-
-
-
+import blank from "../images/blank.png";
+import ScoreBoard from "./ScoreBoard";
 
 const Board = ({ width, candyColors }) => {
   const [currentColorArrangement, setCurrentColorArrangement] = useState([]);
@@ -11,11 +9,17 @@ const Board = ({ width, candyColors }) => {
   const [counter, setCounter] = useState(0);
   const [squareBeingDragged, setSquareBeingDragged] = useState(null);
   const [squareBeingReplaced, setSquareBeingReplaced] = useState(null);
+  const [score, setScore] = useState(0);
+  // localStorage.setItem('highScore', 0)
+  // localStorage.removeItem('highScore')
+  
+  
 
   useEffect(() => {
     createBoard();
     setCounter(1);
-  }, []); 
+    
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,41 +41,49 @@ const Board = ({ width, candyColors }) => {
       randomColorArrangement.push(randomColor);
     }
     setCurrentColorArrangement(randomColorArrangement);
-    console.log(randomColorArrangement);
+    // console.log(randomColorArrangement);
   };
 
   const checkForColumnOfThree = () => {
     for (let i = 0; i <= 47; i++) {
       const columnOfThree = [i, i + width, i + width * 2];
       const decidedColor = currentColorArrangement[i];
+      const isBlank = currentColorArrangement[i] === blank;
 
       if (
         columnOfThree.every(
-          (square) => currentColorArrangement[square] === decidedColor
+          (square) =>
+            currentColorArrangement[square] === decidedColor && !isBlank
         )
       ) {
+        setScore((score) => score + 3);
         columnOfThree.forEach(
           (square) => (currentColorArrangement[square] = blank)
         );
       }
     }
+    return true;
   };
 
   const checkForColumnOfFour = () => {
     for (let i = 0; i <= 39; i++) {
       const columnOfFour = [i, i + width, i + width * 2, i + width * 3];
       const decidedColor = currentColorArrangement[i];
+      const isBlank = currentColorArrangement[i] === blank;
 
       if (
         columnOfFour.every(
-          (square) => currentColorArrangement[square] === decidedColor
+          (square) =>
+            currentColorArrangement[square] === decidedColor && !isBlank
         )
       ) {
+        setScore((score) => score + 4);
         columnOfFour.forEach(
           (square) => (currentColorArrangement[square] = blank)
         );
       }
     }
+    return true;
   };
 
   const checkForRowOfThree = () => {
@@ -81,17 +93,23 @@ const Board = ({ width, candyColors }) => {
       const notValid = [
         6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64,
       ];
+      const isBlank = currentColorArrangement[i] === blank;
 
       if (notValid.includes(i)) continue;
 
       if (
         rowOfThree.every(
-          (square) => currentColorArrangement[square] === decidedColor
+          (square) =>
+            currentColorArrangement[square] === decidedColor && !isBlank
         )
       ) {
-        rowOfThree.forEach((square) => (currentColorArrangement[square] = blank));
+        setScore((score) => score + 3);
+        rowOfThree.forEach(
+          (square) => (currentColorArrangement[square] = blank)
+        );
       }
     }
+    return true;
   };
 
   const checkForRowOfFour = () => {
@@ -102,17 +120,23 @@ const Board = ({ width, candyColors }) => {
         5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53,
         54, 55, 62, 63, 64,
       ];
+      const isBlank = currentColorArrangement[i] === blank;
 
       if (notValid.includes(i)) continue;
 
       if (
         rowOfFour.every(
-          (square) => currentColorArrangement[square] === decidedColor
+          (square) =>
+            currentColorArrangement[square] === decidedColor && !isBlank
         )
       ) {
-        rowOfFour.forEach((square) => (currentColorArrangement[square] = blank));
+        setScore((score) => score + 4);
+        rowOfFour.forEach(
+          (square) => (currentColorArrangement[square] = blank)
+        );
       }
     }
+    return true;
   };
 
   const moveIntoSquareBelow = () => {
@@ -152,9 +176,9 @@ const Board = ({ width, candyColors }) => {
     );
 
     currentColorArrangement[squareBeingReplacedId] =
-      squareBeingDragged.getAttribute('src');
+      squareBeingDragged.getAttribute("src");
     currentColorArrangement[squareBeingDraggedId] =
-      squareBeingReplaced.getAttribute('src');
+      squareBeingReplaced.getAttribute("src");
 
     const validMoves = [
       squareBeingDraggedId - 1,
@@ -170,39 +194,45 @@ const Board = ({ width, candyColors }) => {
     const isAColumnOfThree = checkForColumnOfThree();
     const isARowOfThree = checkForRowOfThree();
 
-
-    if (squareBeingReplacedId &&
-        validMove &&
-        (isARowOfThree || isARowOfFour || isAColumnOfFour || isAColumnOfThree)) {
-        setSquareBeingDragged(null)
-        setSquareBeingReplaced(null)
+    if (
+      squareBeingReplacedId &&
+      validMove &&
+      (isARowOfThree || isARowOfFour || isAColumnOfFour || isAColumnOfThree)
+    ) {
+      setSquareBeingDragged(null);
+      setSquareBeingReplaced(null);
     } else {
-        currentColorArrangement[squareBeingReplacedId] = squareBeingReplaced.getAttribute('src')
-        currentColorArrangement[squareBeingDraggedId] = squareBeingDragged.getAttribute('src')
-        setCurrentColorArrangement([...currentColorArrangement])
+      currentColorArrangement[squareBeingReplacedId] =
+        squareBeingReplaced.getAttribute("src");
+      currentColorArrangement[squareBeingDraggedId] =
+        squareBeingDragged.getAttribute("src");
+      setCurrentColorArrangement([...currentColorArrangement]);
     }
   };
 
   return (
-    <div className="game flex flex-wrap">
-      {currentColorArrangement.map((candyColor, index) => {
-        return (
-          <img
-            className="image"
-            key={index}
-            src={candyColor}
-            alt={candyColor}
-            data-id={index}
-            draggable={true}
-            onDragStart={dragStart}
-            onDragOver={(e) => e.preventDefault()}
-            onDragEnter={(e) => e.preventDefault()}
-            onDragLeave={(e) => e.preventDefault()}
-            onDrop={dragDrop}
-            onDragEnd={dragEnd}
-          />
-        );
-      })}
+    <div className="flex space-x-10">
+      <div className="game flex flex-wrap">
+        {currentColorArrangement.map((candyColor, index) => {
+          return (
+            <img
+              className="image"
+              key={index}
+              src={candyColor}
+              alt={candyColor}
+              data-id={index}
+              draggable={true}
+              onDragStart={dragStart}
+              onDragOver={(e) => e.preventDefault()}
+              onDragEnter={(e) => e.preventDefault()}
+              onDragLeave={(e) => e.preventDefault()}
+              onDrop={dragDrop}
+              onDragEnd={dragEnd}
+            />
+          );
+        })}
+      </div>
+      <ScoreBoard score={score} />
     </div>
   );
 };
